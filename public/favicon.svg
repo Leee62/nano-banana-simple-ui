@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="72" fill="url(#bg)"/>
+  <rect x="20" y="20" width="216" height="216" rx="56" fill="white" fill-opacity="0.12" stroke="white" stroke-opacity="0.24" stroke-width="2"/>
+  <path d="M79 149C79 105.922 109.222 71 146.5 71C149.091 71 151 73.1005 151 75.5C151 77.8995 149.091 80 146.5 80C114.573 80 88 110.077 88 149C88 167.778 103.222 183 122 183H127C153.51 183 175 161.51 175 135V127C175 117.611 167.389 110 158 110C148.611 110 141 117.611 141 127V137C141 149.703 130.703 160 118 160C105.297 160 95 149.703 95 137C95 117.118 111.118 101 131 101H158C172.359 101 184 112.641 184 127V135C184 166.481 158.481 192 127 192H122C98.252 192 79 172.748 79 149Z" fill="url(#banana)"/>
+  <defs>
+    <linearGradient id="bg" x1="23" y1="19" x2="231" y2="235" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EAF4FF"/>
+      <stop offset="1" stop-color="#A6D3FF"/>
+    </linearGradient>
+    <linearGradient id="banana" x1="95" y1="89" x2="173" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF3A2"/>
+      <stop offset="0.52" stop-color="#FFD45F"/>
+      <stop offset="1" stop-color="#FF9E3D"/>
+    </linearGradient>
+  </defs>
+</svg>
