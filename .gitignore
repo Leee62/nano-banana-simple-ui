@@ -8,3 +8,4 @@ dist
 .env.local
 .husky/_
 npm-debug.log*
+*.tar.gz
