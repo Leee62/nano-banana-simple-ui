@@ -10,7 +10,7 @@ RUN corepack enable pnpm
 COPY package.json pnpm-lock.yaml ./
 
 # Install all dependencies (including dev for building)
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
 # Copy the rest of the source code
 COPY . .
@@ -35,7 +35,7 @@ ENV PORT=3000
 COPY package.json pnpm-lock.yaml ./
 
 # Install only production dependencies
-RUN pnpm install --frozen-lockfile --prod
+RUN pnpm install --frozen-lockfile --prod --ignore-scripts
 
 # Copy built artifacts from the builder stage
 COPY --from=builder /app/dist ./dist
