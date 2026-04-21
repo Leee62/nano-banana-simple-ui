@@ -36,12 +36,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { generateImage } from '@/lib/api';
 import { downloadDataUrl } from '@/lib/download';
-import {
-  getInitialLocale,
-  messages,
-  APP_LOCALE_STORAGE_KEY,
-  localeOptions
-} from '@/lib/i18n';
+import { getInitialLocale, messages, APP_LOCALE_STORAGE_KEY, localeOptions } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import {
   type AspectRatio,
@@ -74,9 +69,7 @@ type GeneratedImageAsset = {
   response: GenerateImageResponse;
 };
 
-type FullscreenTarget =
-  | { kind: 'generated'; id: string }
-  | { kind: 'reference'; id: string };
+type FullscreenTarget = { kind: 'generated'; id: string } | { kind: 'reference'; id: string };
 
 type BatchProgress = {
   total: number;
@@ -122,14 +115,17 @@ export function ImageGeneratorApp() {
     historyImages.find((asset) => asset.id === focusedImageId) ?? historyImages[0] ?? null;
   const fullscreenGeneratedImage =
     fullscreenTarget?.kind === 'generated'
-      ? historyImages.find((asset) => asset.id === fullscreenTarget.id) ??
-      (focusedImage?.id === fullscreenTarget.id ? focusedImage : null)
+      ? (historyImages.find((asset) => asset.id === fullscreenTarget.id) ??
+        (focusedImage?.id === fullscreenTarget.id ? focusedImage : null))
       : null;
   const fullscreenReferenceImage =
     fullscreenTarget?.kind === 'reference'
-      ? referenceImages.find((image) => image.id === fullscreenTarget.id) ?? null
+      ? (referenceImages.find((image) => image.id === fullscreenTarget.id) ?? null)
       : null;
-  const previewAspectRatio = (focusedImage?.response.aspectRatio ?? aspectRatio).replace(':', ' / ');
+  const previewAspectRatio = (focusedImage?.response.aspectRatio ?? aspectRatio).replace(
+    ':',
+    ' / '
+  );
   const allHistorySelected =
     historyImages.length > 0 && selectedHistoryIds.length === historyImages.length;
   const comparedImages = historyImages.filter((asset) => comparedImageIds.includes(asset.id));
@@ -259,7 +255,11 @@ export function ImageGeneratorApp() {
           ? firstError.reason.message
           : undefined;
       setError(
-        copy.partialFailureError(concurrentCount - failedResults.length, failedResults.length, reason)
+        copy.partialFailureError(
+          concurrentCount - failedResults.length,
+          failedResults.length,
+          reason
+        )
       );
     }
   }
@@ -388,7 +388,7 @@ export function ImageGeneratorApp() {
         <div className="app-glow app-glow-a" />
         <div className="app-glow app-glow-b" />
 
-        <div className="mx-auto flex h-full w-full max-w-[1920px] flex-col gap-3">
+        <div className="mx-auto flex h-full min-h-0 w-full max-w-[1920px] flex-col gap-3">
           <section className="liquid-panel liquid-panel-strong relative rounded-[24px] px-4 py-3">
             <div className="flex items-center justify-between gap-3">
               <h1 className="min-w-0 truncate text-[1.25rem] font-semibold tracking-[-0.03em] text-slate-950 md:text-[1.4rem]">
@@ -421,7 +421,7 @@ export function ImageGeneratorApp() {
           >
             <Card className="workspace-sidebar h-full min-h-0 min-w-0 overflow-hidden rounded-[28px]">
               <CardContent className="panel-scroll flex h-full min-h-0 min-w-0 flex-col gap-1.5 overflow-hidden p-2.5">
-                <section className="liquid-section rounded-[22px] p-2">
+                <section className="p-2 flex flex-col flex-1 min-h-0">
                   <div className="flex items-center justify-between gap-3">
                     <Label htmlFor="prompt" className="text-slate-900">
                       {copy.promptLabel}
@@ -437,18 +437,21 @@ export function ImageGeneratorApp() {
                     value={prompt}
                     onChange={(event) => setPrompt(event.target.value)}
                     onKeyDown={handlePromptKeyDown}
-                    className="mt-2 min-h-[244px] resize-none rounded-[20px] px-3 py-2.5 text-xs leading-5"
+                    className="mt-2 flex-1 min-h-[100px] resize-none rounded-[20px] px-3 py-2.5 text-xs leading-5"
                   />
                 </section>
 
-                <section className="liquid-section rounded-[22px] p-2">
+                <section className="p-2 shrink-0">
                   <div className="mb-1.5 flex items-center justify-between gap-3">
                     <span className="panel-kicker">{copy.controlsSectionTitle}</span>
                   </div>
 
                   <div className="controls-grid">
                     <CompactField label={copy.modelLabel}>
-                      <Select value={model} onValueChange={(value) => setModel(value as ImageModel)}>
+                      <Select
+                        value={model}
+                        onValueChange={(value) => setModel(value as ImageModel)}
+                      >
                         <SelectTrigger className={compactSelectClassName}>
                           <SelectValue placeholder={copy.modelLabel} />
                         </SelectTrigger>
@@ -538,9 +541,11 @@ export function ImageGeneratorApp() {
                   </div>
                 </section>
 
-                <section className="liquid-section flex min-h-0 flex-1 flex-col overflow-hidden rounded-[22px] p-1.5">
+                <section className="flex flex-col overflow-hidden p-1.5 shrink-0">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="panel-kicker whitespace-nowrap">{copy.referenceSectionTitle}</span>
+                    <span className="panel-kicker whitespace-nowrap">
+                      {copy.referenceSectionTitle}
+                    </span>
                     <label htmlFor="reference-images" className="upload-cta cursor-pointer">
                       <ImagePlus className="h-4 w-4" />
                       {copy.uploadReference}
@@ -558,7 +563,7 @@ export function ImageGeneratorApp() {
                   </div>
 
                   {referenceImages.length > 0 ? (
-                    <div className="reference-grid mt-1.5 min-h-0 flex-1">
+                    <div className="reference-grid mt-1.5">
                       {referenceImages.map((image) => (
                         <article
                           key={image.id}
@@ -572,7 +577,9 @@ export function ImageGeneratorApp() {
                           <div className="reference-actions">
                             <button
                               type="button"
-                              onClick={() => setFullscreenTarget({ kind: 'reference', id: image.id })}
+                              onClick={() =>
+                                setFullscreenTarget({ kind: 'reference', id: image.id })
+                              }
                               className="reference-action-button"
                               aria-label={copy.fullscreenPreview}
                               title={copy.fullscreenPreview}
@@ -597,15 +604,15 @@ export function ImageGeneratorApp() {
                   )}
                 </section>
 
-                <section className="liquid-panel rounded-[22px] p-2">
+                <section className="p-2 shrink-0">
                   <div className="flex flex-col gap-2">
                     <div className="status-strip">
                       <span className={cn('liquid-chip', isPromptReady && 'liquid-chip-active')}>
                         {isGenerating
                           ? copy.generatingStatus(
-                            batchProgress?.finished ?? 0,
-                            batchProgress?.total ?? concurrentCount
-                          )
+                              batchProgress?.finished ?? 0,
+                              batchProgress?.total ?? concurrentCount
+                            )
                           : copy.standbyStatus}
                       </span>
                       <span className="liquid-chip">
@@ -646,7 +653,9 @@ export function ImageGeneratorApp() {
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <div>
                     <span className="panel-kicker">{copy.generatedImageSectionTitle}</span>
-                    <p className="mt-2 text-xs leading-5 text-slate-600/80">{copy.generatedImageHint}</p>
+                    <p className="mt-2 text-xs leading-5 text-slate-600/80">
+                      {copy.generatedImageHint}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-2">
@@ -664,7 +673,9 @@ export function ImageGeneratorApp() {
                         />
                         <IconButton
                           label={copy.fullscreenPreview}
-                          onClick={() => setFullscreenTarget({ kind: 'generated', id: focusedImage.id })}
+                          onClick={() =>
+                            setFullscreenTarget({ kind: 'generated', id: focusedImage.id })
+                          }
                           icon={<Expand className="h-4 w-4" />}
                         />
                       </>
@@ -739,7 +750,9 @@ export function ImageGeneratorApp() {
                             />
                             <IconButton
                               label={copy.fullscreenPreview}
-                              onClick={() => setFullscreenTarget({ kind: 'generated', id: asset.id })}
+                              onClick={() =>
+                                setFullscreenTarget({ kind: 'generated', id: asset.id })
+                              }
                               icon={<Expand className="h-3.5 w-3.5" />}
                             />
                           </div>
@@ -759,7 +772,9 @@ export function ImageGeneratorApp() {
                     title={copy.historyPersistenceHint}
                   >
                     <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                    <span className="truncate whitespace-nowrap">{copy.historyPersistenceHint}</span>
+                    <span className="truncate whitespace-nowrap">
+                      {copy.historyPersistenceHint}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
@@ -779,7 +794,7 @@ export function ImageGeneratorApp() {
                 </div>
 
                 {historyImages.length > 0 ? (
-                  <div className="history-list min-h-0 flex-1 overflow-auto pr-1">
+                  <div className="min-h-0 flex-1 overflow-y-auto pr-1 flex flex-col gap-3">
                     {historyImages.map((asset) => {
                       const isSelected = selectedHistorySet.has(asset.id);
                       const isFocused = focusedImage?.id === asset.id;
@@ -788,7 +803,7 @@ export function ImageGeneratorApp() {
                         <article
                           key={asset.id}
                           className={cn(
-                            'history-card asset-card cursor-pointer rounded-[22px] p-2.5 group',
+                            'history-card cursor-pointer rounded-[22px] border border-transparent p-2.5 group shrink-0',
                             isFocused && 'history-card-focused',
                             isSelected && 'history-card-selected'
                           )}
@@ -902,8 +917,13 @@ export function ImageGeneratorApp() {
 
           <div className="lightbox-stage" onClick={() => setFullscreenTarget(null)}>
             <img
-              src={fullscreenGeneratedImage?.response.imageDataUrl ?? fullscreenReferenceImage?.previewDataUrl}
-              alt={fullscreenGeneratedImage?.response.prompt ?? fullscreenReferenceImage?.name ?? ''}
+              src={
+                fullscreenGeneratedImage?.response.imageDataUrl ??
+                fullscreenReferenceImage?.previewDataUrl
+              }
+              alt={
+                fullscreenGeneratedImage?.response.prompt ?? fullscreenReferenceImage?.name ?? ''
+              }
               className="lightbox-image"
               onClick={(event) => event.stopPropagation()}
             />
@@ -1009,11 +1029,9 @@ function ResultPlaceholder({
         <p className="text-lg font-semibold tracking-[-0.02em] text-slate-950">
           {isGenerating
             ? copy.emptyStateGenerating(requestedCount)
-            : error ?? copy.emptyStateTitle}
+            : (error ?? copy.emptyStateTitle)}
         </p>
-        <p className="mt-2 text-sm leading-6 text-slate-600/85">
-          {copy.emptyStateHint}
-        </p>
+        <p className="mt-2 text-sm leading-6 text-slate-600/85">{copy.emptyStateHint}</p>
       </div>
 
       {!isGenerating ? (
