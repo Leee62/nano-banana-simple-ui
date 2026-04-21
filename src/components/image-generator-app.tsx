@@ -108,8 +108,6 @@ export function ImageGeneratorApp() {
   const promptLength = prompt.trim().length;
   const isPromptReady = promptLength > 0;
   const isGenerating = batchProgress !== null;
-  const shortcutModifier =
-    typeof navigator !== 'undefined' && navigator.platform.includes('Mac') ? 'Cmd' : 'Ctrl';
   const selectedHistorySet = new Set(selectedHistoryIds);
   const focusedImage =
     historyImages.find((asset) => asset.id === focusedImageId) ?? historyImages[0] ?? null;
@@ -387,6 +385,7 @@ export function ImageGeneratorApp() {
         <div className="app-grid pointer-events-none absolute inset-0" />
         <div className="app-glow app-glow-a" />
         <div className="app-glow app-glow-b" />
+        <div className="app-glow app-glow-c" />
 
         <div className="mx-auto flex h-full min-h-0 w-full max-w-[1920px] flex-col gap-3">
           <section className="liquid-panel liquid-panel-strong relative rounded-[24px] px-4 py-3">
@@ -617,9 +616,6 @@ export function ImageGeneratorApp() {
                       </span>
                       <span className="liquid-chip">
                         {copy.referenceImagesCount(referenceImages.length)}
-                      </span>
-                      <span className="panel-kicker whitespace-nowrap">
-                        {copy.shortcutHint} {shortcutModifier} + Enter
                       </span>
                     </div>
 
