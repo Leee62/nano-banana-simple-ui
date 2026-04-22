@@ -8,18 +8,18 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "dev": "concurrently -k -n client,server -c cyan,magenta \"npm:dev:client\" \"npm:dev:server\"",
+    "dev": "concurrently -k -n client,server -c cyan,magenta \"pnpm dev:client\" \"pnpm dev:server\"",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
-    "build": "npm run typecheck && npm run build:client && npm run build:server",
+    "build": "pnpm run typecheck && pnpm run build:client && pnpm run build:server",
     "build:client": "vite build",
-    "build:server": "tsc server/index.ts --outDir dist/server --esModuleInterop --skipLibCheck --module NodeNext --moduleResolution NodeNext",
+    "build:server": "tsc server/index.ts --outDir dist --esModuleInterop --skipLibCheck --module NodeNext --moduleResolution NodeNext",
     "start": "NODE_ENV=production node dist/server/index.js",
     "lint": "eslint . && stylelint \"src/**/*.css\"",
     "format": "prettier . --write",
     "format:check": "prettier . --check .",
     "typecheck": "tsc --noEmit",
-    "check": "npm run lint && npm run typecheck && npm run build"
+    "check": "pnpm run lint && pnpm run typecheck && pnpm run build"
   },
   "dependencies": {
     "@google/genai": "^1.49.0",
