@@ -438,12 +438,24 @@ export function ImageGeneratorApp() {
                     onKeyDown={handlePromptKeyDown}
                     className="mt-2 flex-1 min-h-[100px] resize-none rounded-[20px] px-3 py-2.5 text-xs leading-5"
                   />
+                  <div className="mt-2 grid grid-cols-2 gap-2 shrink-0">
+                    <GroundingToggle
+                      title={copy.webSearchLabel}
+                      active={grounding.webSearch}
+                      disabled={!modelDefinition.supportsWebGrounding}
+                      onClick={() => toggleGrounding('webSearch')}
+                    />
+
+                    <GroundingToggle
+                      title={copy.imageSearchLabel}
+                      active={grounding.imageSearch}
+                      disabled={!modelDefinition.supportsImageSearchGrounding}
+                      onClick={() => toggleGrounding('imageSearch')}
+                    />
+                  </div>
                 </section>
 
                 <section className="p-2 shrink-0">
-                  <div className="mb-1.5 flex items-center justify-between gap-3">
-                    <span className="panel-kicker">{copy.controlsSectionTitle}</span>
-                  </div>
 
                   <div className="controls-grid">
                     <CompactField label={copy.modelLabel}>
@@ -524,83 +536,66 @@ export function ImageGeneratorApp() {
                       </Select>
                     </CompactField>
 
-                    <GroundingToggle
-                      title={copy.webSearchLabel}
-                      active={grounding.webSearch}
-                      disabled={!modelDefinition.supportsWebGrounding}
-                      onClick={() => toggleGrounding('webSearch')}
-                    />
-
-                    <GroundingToggle
-                      title={copy.imageSearchLabel}
-                      active={grounding.imageSearch}
-                      disabled={!modelDefinition.supportsImageSearchGrounding}
-                      onClick={() => toggleGrounding('imageSearch')}
-                    />
                   </div>
                 </section>
 
                 <section className="flex flex-col overflow-hidden p-1.5 shrink-0">
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="panel-kicker whitespace-nowrap">
-                      {copy.referenceSectionTitle}
-                    </span>
-                    <label htmlFor="reference-images" className="upload-cta cursor-pointer">
-                      <ImagePlus className="h-4 w-4" />
-                      {copy.uploadReference}
-                    </label>
-                    <input
-                      id="reference-images"
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      className="hidden"
-                      onChange={(event) => {
-                        void handleReferenceImageChange(event);
-                      }}
-                    />
-                  </div>
+                  <input
+                    id="reference-images"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={(event) => {
+                      void handleReferenceImageChange(event);
+                    }}
+                  />
 
-                  {referenceImages.length > 0 ? (
-                    <div className="reference-grid mt-1.5">
-                      {referenceImages.map((image) => (
-                        <article
-                          key={image.id}
-                          className="asset-card reference-card group rounded-[18px]"
-                        >
-                          <img
-                            src={image.previewDataUrl}
-                            alt={image.name}
-                            className="reference-thumb aspect-[4/3] w-full object-cover"
-                          />
-                          <div className="reference-actions">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setFullscreenTarget({ kind: 'reference', id: image.id })
-                              }
-                              className="reference-action-button"
-                              aria-label={copy.fullscreenPreview}
-                              title={copy.fullscreenPreview}
-                            >
-                              <Expand className="h-4 w-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => removeReferenceImage(image.id)}
-                              className="reference-action-button reference-delete-button"
-                              aria-label={copy.deleteReference(image.name)}
-                              title={copy.deleteReferenceShort}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="compact-note mt-1.5 flex-1">{copy.noReference}</div>
-                  )}
+                  <div className="reference-grid">
+                    {referenceImages.map((image) => (
+                      <article
+                        key={image.id}
+                        className="asset-card reference-card group rounded-[18px]"
+                      >
+                        <img
+                          src={image.previewDataUrl}
+                          alt={image.name}
+                          className="reference-thumb aspect-[4/3] w-full object-cover"
+                        />
+                        <div className="reference-actions">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setFullscreenTarget({ kind: 'reference', id: image.id })
+                            }
+                            className="reference-action-button"
+                            aria-label={copy.fullscreenPreview}
+                            title={copy.fullscreenPreview}
+                          >
+                            <Expand className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => removeReferenceImage(image.id)}
+                            className="reference-action-button reference-delete-button"
+                            aria-label={copy.deleteReference(image.name)}
+                            title={copy.deleteReferenceShort}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                    {referenceImages.length < MAX_REFERENCE_IMAGES && (
+                      <label
+                        htmlFor="reference-images"
+                        className="asset-card reference-card flex cursor-pointer flex-col items-center justify-center rounded-[18px] transition-colors hover:bg-slate-50/50 aspect-[4/3] shrink-0"
+                      >
+                        <ImagePlus className="h-5 w-5 text-slate-400 mb-1" />
+                        <span className="text-[10px] font-medium text-slate-500">{copy.uploadReference}</span>
+                      </label>
+                    )}
+                  </div>
                 </section>
 
                 <section className="p-2 shrink-0">
